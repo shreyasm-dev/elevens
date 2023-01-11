@@ -68,13 +68,38 @@ Keeping the above in mind, we can calculate the value of a card as follows:
 \begin{outline}
   \1 Where $D(C) = \text{number of cards in the deck that equal C}$
   \1 Where $H(C) = \text{number of cards on hand that equal C}$
+  \1 Where $n = \text{number of cards in the deck}$
 \end{outline}
 
 \begin{outline}
   \1 For numbered cards:
-    \2 Where $V(C) = \text{relative value of the numbered card}$, $V(C) = ...$
+    \2 For immediate value, $I(C) = H(C')$
+    \2 For future value, $F(C) = \frac{D(C')^2}{n}$
   \1 For face cards:
-    \2 Where $V(F) = \text{relative value of the face card}$, $V(F) = ...$
+    \2 For immediate value, $I(F) = \frac{H(F_1) + H(F_2)}{2}$
+    \2 For future value, $F(F) = (\frac{D(F_1) + D(F_2)}{2})^2 * I(F)$
 \end{outline}
+
+For example, an example starting state ($n = 43$):
+
+\vspace{3mm}
+
+\redcard{Q}{\diamondsuit}
+\blackcard{8}{\spadesuit}
+\blackcard{6}{\clubsuit}
+\redcard{7}{\heartsuit}
+\blackcard{10}{\clubsuit}
+\redcard{6}{\heartsuit}
+\redcard{A}{\heartsuit}
+\redcard{A}{\diamondsuit}
+\blackcard{K}{\clubsuit}
+
+\vspace{3mm}
+
+In this state, these are the values of the queen of diamonds and the ten of clubs:
+
+$I(Q) = 0.5$, $F(Q) = \frac{49}{8}$
+
+$I(10) = 2$, $F(10) = \frac{4}{43}$
 
 \end{document}
