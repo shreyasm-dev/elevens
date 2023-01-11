@@ -1,15 +1,23 @@
-\newcommand\blackcard[2]{%
-  \begingroup\fboxsep=0pt\relax
-  \fbox{\tabbedCenterstack{%
-  \scriptsize$#2$ && \\&\makebox[10pt]{#1}&\\&
-  &\rotatebox[origin=c]{180}{\scriptsize$#2$}}}%
-  \endgroup}
+\newcommand\blackcard[2]{
+  \fboxsep=0pt
+  \fbox{
+    \tabbedCenterstack{
+      \scriptsize $#2$
+      \makebox[10pt]{#1}
+    }
+  }
+}
 
-\newcommand\redcard[2]{%
-  \begingroup\fboxsep=0pt\relax
-  \fbox{\color{red}\tabbedCenterstack{%
-  \scriptsize$#2$ && \\&\makebox[10pt]{#1}&\\&&\rotatebox[origin=c]{180}{\scriptsize$#2$}}}%
-  \endgroup}
+\newcommand\redcard[2]{
+  \fboxsep=0pt
+  \fbox{
+    \color{red}
+    \tabbedCenterstack{
+      \scriptsize $#2$
+      \makebox[10pt]{#1}
+    }
+  }
+}
 
 \documentclass{article}
 \usepackage[utf8]{inputenc}
@@ -80,7 +88,7 @@ Keeping the above in mind, we can calculate the value of a card as follows:
     \2 For future value, $F(F) = (\frac{D(F_1) + D(F_2)}{2})^2 * I(F)$
 \end{outline}
 
-For example, an example starting state ($n = 43$):
+For example, a starting state ($n = 43$):
 
 \vspace{3mm}
 
