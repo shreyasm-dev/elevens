@@ -1,5 +1,23 @@
+\newcommand\blackcard[2]{%
+  \begingroup\fboxsep=0pt\relax
+  \fbox{\tabbedCenterstack{%
+  \scriptsize$#2$ && \\&\makebox[10pt]{#1}&\\&
+  &\rotatebox[origin=c]{180}{\scriptsize$#2$}}}%
+  \endgroup}
+
+\newcommand\redcard[2]{%
+  \begingroup\fboxsep=0pt\relax
+  \fbox{\color{red}\tabbedCenterstack{%
+  \scriptsize$#2$ && \\&\makebox[10pt]{#1}&\\&&\rotatebox[origin=c]{180}{\scriptsize$#2$}}}%
+  \endgroup}
+
 \documentclass{article}
 \usepackage[utf8]{inputenc}
+\usepackage{tabstackengine}
+\usepackage{xcolor}
+\usepackage{rotating}
+\usepackage{outlines}
+\usepackage{amsmath}
 
 \title{Elevens Strategy}
 \author{Shreyas Muppana}
@@ -14,5 +32,49 @@
 Elevens is a single-player card game that is played using a standard deck of fifty two cards (excluding Jokers). The objective of the game is to clear a board of nine cards by forming pairs that add up to eleven.
 
 The game begins with a set of cards placed face up on the board. The board should have 9 cards at the start of the game. The player's task is to select cards from the board (to make a play) and form pairs that add up to eleven. For example, a player can select a five and a six, or a three and an eight. When a pair is formed, the cards are removed from the board. The player can also play a Jack, Queen, and King, in which case, all three cards will be removed. Cards are drawn from the shuffled deck to replace. The player wins when there are no more cards left in the deck, but if there are no valid plays before that, the player loses.
+
+\section{Notation}
+
+If $C$ is a numbered card, then $C'$ is its complement. For example, if $C = 5$, then $C' = 6$, and if $C = 1$, then $C' = 10$.
+
+If $F$ is a face card, then $F_1$ and $F_2$, in no order, are the other two face cards that make up the Jack-Queen-King combination. For example, if $F = \text{J}$, then $F_1 = \text{Q}$ and $F_2 = \text{K}$ (or vice versa).
+
+\section{Calculating the Value of a Card}
+
+We must take into consideration these following factors when calculating the value of a card:
+
+\begin{outline}
+  \1 To win a game, the player must make exactly twenty pairs, and exactly four Jack-Queen-King combinations
+  \1 At the beginning of a round:
+    \2 Each numbered card has exactly four other numbered cards it can pair with, in hand or deck
+    \2 Each face card has exactly sixteen Jack-Queen-King combinations it is part of, in hand or deck
+    \2 There are sixty four possible face card combinations
+  \1 The \emph{immediate} value of a card will depend on:
+    \2 For numbered cards:
+      \3 The number of cards on hand that equal $C'$
+    \2 For face cards:
+      \3 The number of face cards on hand that equal $F_1$
+      \3 The number of face cards on hand that equal $F_2$
+  \1 The \emph{future} value of a card will depend on:
+    \2 For numbered cards:
+      \3 The number of cards in the deck that equal $C'$
+    \2 For face cards:
+      \3 The number of face cards in the deck that equal $F_1$
+      \3 The number of face cards in the deck that equal $F_2$
+\end{outline}
+
+Keeping the above in mind, we can calculate the value of a card as follows:
+
+\begin{outline}
+  \1 Where $D(C) = \text{number of cards in the deck that equal C}$
+  \1 Where $H(C) = \text{number of cards on hand that equal C}$
+\end{outline}
+
+\begin{outline}
+  \1 For numbered cards:
+    \2 Where $V(C) = \text{relative value of the numbered card}$, $V(C) = ...$
+  \1 For face cards:
+    \2 Where $V(F) = \text{relative value of the face card}$, $V(F) = ...$
+\end{outline}
 
 \end{document}
