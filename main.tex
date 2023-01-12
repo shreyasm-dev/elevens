@@ -87,7 +87,7 @@ Keeping the above in mind, we can calculate the value of a card as follows:
     \2 For immediate value, $I(C) = H(C')$
     \2 For future value, $F(C) = \frac{D(C')^2}{n}$
   \1 For face cards:
-    \2 For immediate value, $I(F) = \frac{H(F_1) + H(F_2)}{2}$
+    \2 For immediate value, $I(F) = (\frac{H(F_1) + H(F_2)}{2})^2$
     \2 For future value, $F(F) = (\frac{D(F_1) + D(F_2)}{2})^2 * I(F)$
 \end{outline}
 
@@ -107,38 +107,10 @@ For example, a starting state ($n = 43$):
 \redcard{A}{\diamondsuit}
 \blackcard{K}{\clubsuit}
 
-\vspace{3mm}
-
-In this state, these are the values of the queen of diamonds and the ten of clubs:
-
-$I(Q) = \frac{1}{2}$, $F(Q) = \frac{49}{8}, V(Q) = -\frac{45}{8}$
-
-$I(10) = 2$, $F(10) = \frac{4}{43}, V(10) = \frac{82}{43}$
-
 \section{Strategy}
 
 The strategy is simple; it is to play the card with the highest value. This ensures that cards with the highest future value are played last, so cards with high immediate values, which will generally have low future values, are played first.
 
-Continuing the previous example, we can calculate the values of all of the cards:
-
-$V(Q) = -\frac{45}{8}$
-
-$V(8) = -\frac{16}{43}$
-
-$V(6) = -\frac{16}{43}$
-
-$V(7) = -\frac{16}{43}$
-
-$V(10) = \frac{82}{43}$
-
-$V(6) = -\frac{16}{43}$
-
-$V(A) = \frac{34}{43}$
-
-$V(A) = \frac{34}{43}$
-
-$V(K) = -\frac{45}{8}$
-
-In this case, we would play (not just because it is the only move, but because it is the best) the ten along with either of the aces.
+Continuing the previous example, we can calculate the values of all of the cards. In this case, we would play (not just because it is the only move, but because it is the best) the ten along with either of the aces.
 
 \end{document}
