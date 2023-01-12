@@ -25,7 +25,7 @@ fn simulate_game(game: &mut Game) -> bool {
     return game.is_game_won();
   }
 
-  let mut plays = game.get_valid_plays();
+  let plays = game.get_valid_plays();
 
   if plays.contains(&Play::FaceTriple) {
     game.play(Play::FaceTriple);
