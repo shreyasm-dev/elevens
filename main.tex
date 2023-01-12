@@ -112,9 +112,8 @@ For example, a starting state ($n = 43$):
 The strategy is simple:
 
 \begin{outline}
-  \1 Play the card with the highest immediate value
-    \2 If there is a tie, play the one with the lowest future value
-      \3 If there is still a tie, choose one randomly
+  \1 Play the card with the highest value ($V(C)$)
+    \2 If there is a tie, choose one randomly
 \end{outline}
 
 Continuing the previous example, we can calculate the values of all of the cards. In this case, we would play (not just because it is the only move, but because it is the best) the ten along with either of the aces.
