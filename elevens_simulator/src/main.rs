@@ -1,13 +1,66 @@
 mod card;
 mod game;
 
-use game::Game;
+use card::{NumberedCard, Card, FaceCard};
+use game::{Game, Board, Deck};
 
 fn main() {
   let mut game = Game::new();
   game.init();
-  println!("{:#?}", game.board.cards);
-  println!("{:#?}", game.get_valid_plays());
+
+  println!("{:#?}", game.board);
+
+  let board_clone = game.board.clone();
+  let deck_clone = game.deck.clone();
+
+  for card in game.board.cards {
+    let clone2 = board_clone.clone();
+    let clone3 = deck_clone.clone();
+    let clone4 = clone2.clone();
+
+    match card {
+      Card::Number(card) => {
+        let i_c = i_c(card, clone2);
+        let f_c = f_c(card, clone3);
+        println!("{:#?} i_c: {}, f_c: {}", card, i_c, f_c);
+      }
+      Card::Face(card) => {
+        let i_f = i_f(card, clone2);
+        let f_f = f_f(card, clone3, clone4);
+        println!("{:#?} i_f: {}, f_f: {}", card, i_f, f_f);
+      }
+    }
+  }
+}
+
+fn i_c(card: NumberedCard, board: Board) -> f64 {
+  let complement = card.get_complement();
+  let count = board.cards.iter().filter(|c| **c == Card::Number(complement)).count() as i32;
+
+  count as f64
+}
+
+fn f_c(card: NumberedCard, deck: Deck) -> f64 {
+  let complement = card.get_complement();
+  let len = deck.cards.len() as i32;
+  let count = deck.cards.iter().filter(|c| **c == Card::Number(complement)).count() as i32;
+
+  (count.pow(2) as f64) / (len as f64)
+}
+
+fn i_f(card: FaceCard, board: Board) -> f64 {
+  let others = card.get_others();
+  let count = board.cards.iter().filter(|c| **c == Card::Face(others.0) || **c == Card::Face(others.1)).count() as i32;
+
+  ((count as f64) / 2.0).powi(2)
+}
+
+fn f_f(card: FaceCard, deck: Deck, board: Board) -> f64 {
+  let others = card.get_others();
+  let count = deck.cards.iter().filter(|c| **c == Card::Face(others.0) || **c == Card::Face(others.1)).count() as i32;
+  let i_f = i_f(card, board);
+
+  ((count as f64) / 2.0).powi(2) * i_f
 }
 
 #[cfg(test)]
