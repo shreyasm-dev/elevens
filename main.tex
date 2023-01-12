@@ -109,7 +109,14 @@ For example, a starting state ($n = 43$):
 
 \section{Strategy}
 
-The strategy is simple; it is to play the card with the highest value. This ensures that cards with the highest future value are played last, so cards with high immediate values, which will generally have low future values, are played first.
+The strategy is simple:
+
+\begin{outline}
+  \1 If there is a face combination, play it
+  \1 If not, play the move with the highest value
+    \2 If there is a tie, play the one with the lowest future value
+      \3 If there is still a tie, choose one randomly
+\end{outline}
 
 Continuing the previous example, we can calculate the values of all of the cards. In this case, we would play (not just because it is the only move, but because it is the best) the ten along with either of the aces.
 
