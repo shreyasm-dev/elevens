@@ -1,7 +1,7 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Play {
   NumberedPair(NumberedCard),
-  FaceTriple,
+  FaceTriple(FaceCard),
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]

@@ -34,7 +34,7 @@ impl Game {
           let others = card.get_others();
 
           if self.board.cards.contains(&Card::Face(others.0)) && self.board.cards.contains(&Card::Face(others.1)) {
-            plays.push(Play::FaceTriple);
+            plays.push(Play::FaceTriple(card));
           }
         }
         Card::Placeholder => (),
@@ -106,7 +106,7 @@ impl Board {
   pub fn play(&mut self, play: Play) {
     let cards = match play {
       Play::NumberedPair(card) => vec![Card::Number(card), Card::Number(card.get_complement())],
-      Play::FaceTriple => vec![
+      Play::FaceTriple(_) => vec![
         Card::Face(FaceCard::Jack),
         Card::Face(FaceCard::Queen),
         Card::Face(FaceCard::King),

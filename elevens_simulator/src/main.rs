@@ -99,9 +99,9 @@ mod tests {
       Play::NumberedPair(NumberedCard::Five),
       Play::NumberedPair(NumberedCard::Six),
       Play::NumberedPair(NumberedCard::Ten),
-      Play::FaceTriple,
-      Play::FaceTriple,
-      Play::FaceTriple
+      Play::FaceTriple(FaceCard::Jack),
+      Play::FaceTriple(FaceCard::Queen),
+      Play::FaceTriple(FaceCard::King),
     ]);
   }
 }
