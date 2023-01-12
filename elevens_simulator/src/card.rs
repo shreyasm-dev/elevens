@@ -1,4 +1,10 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Play {
+  NumberedPair(NumberedCard),
+  FaceTriple,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Card {
   Number(NumberedCard),
   Face(FaceCard),

@@ -1,5 +1,5 @@
 use rand::{thread_rng, seq::SliceRandom};
-use crate::card::{Card, NumberedCard, FaceCard};
+use crate::card::{Card, NumberedCard, FaceCard, Play};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Game {
@@ -20,7 +20,7 @@ impl Game {
     self.board.fill(&mut self.deck);
   }
 
-  pub fn get_valid_plays(self) -> Vec<Vec<Card>> {
+  pub fn get_valid_plays(self) -> Vec<Play> {
     let mut plays = Vec::new();
     let clone = self.board.cards.clone();
 
@@ -28,14 +28,14 @@ impl Game {
       match card {
         Card::Number(card) => {
           if clone.contains(&Card::Number(card.get_complement())) {
-            plays.push(vec![Card::Number(card), Card::Number(card.get_complement())]);
+            plays.push(Play::NumberedPair(card));
           }
         }
         Card::Face(card) => {
           let others = card.get_others();
 
           if clone.contains(&Card::Face(others.0)) && clone.contains(&Card::Face(others.0)) {
-            plays.push(vec![Card::Face(card), Card::Face(others.0), Card::Face(others.1)]);
+            plays.push(Play::FaceTriple);
           }
         }
       }
