@@ -6,8 +6,9 @@ use game::{Game, Board, Deck};
 use rand::{seq::SliceRandom, thread_rng};
 
 fn main() {
-  let mut sum = 0;
   let n = 1000;
+
+  let mut sum = 0;
 
   for _ in 0..n {
     sum += simulate_round(|plays, _| plays.choose(&mut thread_rng()).unwrap().clone());
