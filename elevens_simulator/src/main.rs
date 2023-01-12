@@ -10,13 +10,13 @@ fn main() {
   let n = 1000;
 
   for _ in 0..n {
-    sum += simulate_round(|plays| plays.choose(&mut thread_rng()).unwrap().clone());
+    sum += simulate_round(|plays, _| plays.choose(&mut thread_rng()).unwrap().clone());
   }
 
   println!("~{} games played before winning (randomly picked, {} samples)", (sum as f64) / (n as f64), n);
 }
 
-fn simulate_round<P: Fn(Vec<Play>) -> Play>(picker: P) -> i64 {
+fn simulate_round<P: Fn(Vec<Play>, Game) -> Play>(picker: P) -> i64 {
   let mut n = 1;
   let mut game = Game::new();
   game.init();
@@ -33,12 +33,12 @@ fn simulate_round<P: Fn(Vec<Play>) -> Play>(picker: P) -> i64 {
   n
 }
 
-fn simulate_game<P: Fn(Vec<Play>) -> Play>(game: &mut Game, picker: P) -> bool {
+fn simulate_game<P: Fn(Vec<Play>, Game) -> Play>(game: &mut Game, picker: P) -> bool {
   if game.is_game_won() || game.is_game_lost() {
     return game.is_game_won();
   }
 
-  game.play(picker(game.get_valid_plays()));
+  game.play(picker(game.get_valid_plays(), *game));
 
   simulate_game(game, picker)
 }
