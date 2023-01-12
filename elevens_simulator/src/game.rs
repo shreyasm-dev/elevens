@@ -22,19 +22,18 @@ impl Game {
 
   pub fn get_valid_plays(self) -> Vec<Play> {
     let mut plays = Vec::new();
-    let clone = self.board.cards.clone();
 
     for card in self.board.cards {
       match card {
         Card::Number(card) => {
-          if clone.contains(&Card::Number(card.get_complement())) {
+          if self.board.cards.contains(&Card::Number(card.get_complement())) {
             plays.push(Play::NumberedPair(card));
           }
         }
         Card::Face(card) => {
           let others = card.get_others();
 
-          if clone.contains(&Card::Face(others.0)) && clone.contains(&Card::Face(others.0)) {
+          if self.board.cards.contains(&Card::Face(others.0)) && self.board.cards.contains(&Card::Face(others.1)) {
             plays.push(Play::FaceTriple);
           }
         }
@@ -51,7 +50,7 @@ impl Game {
   }
 
   pub fn is_game_won(self) -> bool {
-    self.deck.cards.is_empty()
+    self.deck.cards.iter().all(|c| *c == Card::Placeholder)
   }
 
   pub fn is_game_lost(self) -> bool {
@@ -124,10 +123,14 @@ impl Board {
   pub fn fill(&mut self, deck: &mut Deck) {
     self.cards = self.cards.map(|card| {
       if card == Card::Placeholder {
-        let index = deck.cards.iter().position(|c| *c != Card::Placeholder).unwrap();
-        let card = deck.cards[index];
-        deck.cards[index] = Card::Placeholder;
-        card
+        let index = deck.cards.iter().position(|c| *c != Card::Placeholder);
+        if let Some(index) = index {
+          let card = deck.cards[index];
+          deck.cards[index] = Card::Placeholder;
+          card
+        } else {
+          Card::Placeholder
+        }
       } else {
         card
       }

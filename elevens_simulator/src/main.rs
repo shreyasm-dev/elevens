@@ -1,36 +1,39 @@
 mod card;
 mod game;
 
-use card::{NumberedCard, Card, FaceCard};
+use card::{NumberedCard, Card, FaceCard, Play};
 use game::{Game, Board, Deck};
+use rand::{seq::SliceRandom, thread_rng};
 
 fn main() {
+  let mut n = 1;
   let mut game = Game::new();
   game.init();
 
-  println!("{:#?}", game.board);
-
-  let board_clone = game.board.clone();
-  let deck_clone = game.deck.clone();
-
-  for card in game.board.cards {
-    let clone2 = board_clone.clone();
-    let clone3 = deck_clone.clone();
-    let clone4 = clone2.clone();
-
-    match card {
-      Card::Number(card) => {
-        let i_c = i_c(card, clone2);
-        let f_c = f_c(card, clone3);
-        println!("{:#?} i_c: {}, f_c: {}", card, i_c, f_c);
-      }
-      Card::Face(card) => {
-        let i_f = i_f(card, clone2);
-        let f_f = f_f(card, clone3, clone4);
-        println!("{:#?} i_f: {}, f_f: {}", card, i_f, f_f);
-      }
-    }
+  while !simulate_game(&mut game) {
+    game = Game::new();
+    game.init();
+    n += 1;
   }
+
+  println!("Game won in {} iterations", n);
+  println!("Verify: {} (deck is empty: {})", game.is_game_won(), game.deck.cards.iter().all(|c| *c == Card::Placeholder));
+}
+
+fn simulate_game(game: &mut Game) -> bool {
+  if game.is_game_won() || game.is_game_lost() {
+    return game.is_game_won();
+  }
+
+  let mut plays = game.get_valid_plays();
+
+  if plays.contains(&Play::FaceTriple) {
+    game.play(Play::FaceTriple);
+  } else {
+    game.play(plays.choose(&mut thread_rng()).unwrap().clone());
+  }
+
+  simulate_game(game)
 }
 
 fn i_c(card: NumberedCard, board: Board) -> f64 {
@@ -72,11 +75,9 @@ mod tests {
   fn get_valid_plays() {
     let mut game = Game::new();
     game.init();
-    game.board.cards = vec![
+    game.board.cards = [
       Card::Number(NumberedCard::One),
-      Card::Number(NumberedCard::Two),
-      Card::Number(NumberedCard::Three),
-      Card::Number(NumberedCard::Four),
+      Card::Number(NumberedCard::Five),
       Card::Number(NumberedCard::Six),
       Card::Number(NumberedCard::Eight),
       Card::Number(NumberedCard::Nine),
@@ -86,12 +87,10 @@ mod tests {
       Card::Face(FaceCard::King),
     ];
 
-    assert_eq!(game.get_valid_plays(), vec![
+    assert_eq!(game.get_valid_plays(), [
       Play::NumberedPair(NumberedCard::One),
-      Play::NumberedPair(NumberedCard::Two),
-      Play::NumberedPair(NumberedCard::Three),
-      Play::NumberedPair(NumberedCard::Eight),
-      Play::NumberedPair(NumberedCard::Nine),
+      Play::NumberedPair(NumberedCard::Five),
+      Play::NumberedPair(NumberedCard::Six),
       Play::NumberedPair(NumberedCard::Ten),
       Play::FaceTriple,
       Play::FaceTriple,
