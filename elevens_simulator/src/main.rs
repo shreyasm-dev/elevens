@@ -6,34 +6,41 @@ use game::{Game, Board, Deck};
 use rand::{seq::SliceRandom, thread_rng};
 
 fn main() {
+  let mut sum = 0;
+  let n = 1000;
+
+  for _ in 0..n {
+    sum += simulate_round(|p| p.choose(&mut thread_rng()).unwrap().clone());
+  }
+
+  println!("~{} games played before winning (random strategy, {} samples)", (sum as f64) / (n as f64), n);
+}
+
+fn simulate_round<P: Fn(Vec<Play>) -> Play>(picker: P) -> i64 {
   let mut n = 1;
   let mut game = Game::new();
   game.init();
 
-  while !simulate_game(&mut game) {
+  while !simulate_game(&mut game, &picker) {
     game = Game::new();
     game.init();
     n += 1;
   }
 
-  println!("Game won in {} iterations", n);
-  println!("Verify: {} (deck is empty: {})", game.is_game_won(), game.deck.cards.iter().all(|c| *c == Card::Placeholder));
+  assert_eq!(game.is_game_won(), true);
+  assert_eq!(game.deck.cards.iter().all(|c| *c == Card::Placeholder), true);
+
+  n
 }
 
-fn simulate_game(game: &mut Game) -> bool {
+fn simulate_game<P: Fn(Vec<Play>) -> Play>(game: &mut Game, picker: P) -> bool {
   if game.is_game_won() || game.is_game_lost() {
     return game.is_game_won();
   }
 
-  let plays = game.get_valid_plays();
+  game.play(picker(game.get_valid_plays()));
 
-  if plays.contains(&Play::FaceTriple) {
-    game.play(Play::FaceTriple);
-  } else {
-    game.play(plays.choose(&mut thread_rng()).unwrap().clone());
-  }
-
-  simulate_game(game)
+  simulate_game(game, picker)
 }
 
 fn i_c(card: NumberedCard, board: Board) -> f64 {
