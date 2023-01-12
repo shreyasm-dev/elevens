@@ -37,16 +37,16 @@ impl NumberedCard {
 
   pub fn get_complement(self) -> NumberedCard {
     match self {
-      One => Self::Ten,
-      Two => Self::Nine,
-      Three => Self::Eight,
-      Four => Self::Seven,
-      Five => Self::Six,
-      Six => Self::Five,
-      Seven => Self::Four,
-      Eight => Self::Three,
-      Nine => Self::Two,
-      Ten => Self::One,
+      NumberedCard::One => Self::Ten,
+      NumberedCard::Two => Self::Nine,
+      NumberedCard::Three => Self::Eight,
+      NumberedCard::Four => Self::Seven,
+      NumberedCard::Five => Self::Six,
+      NumberedCard::Six => Self::Five,
+      NumberedCard::Seven => Self::Four,
+      NumberedCard::Eight => Self::Three,
+      NumberedCard::Nine => Self::Two,
+      NumberedCard::Ten => Self::One,
     }
   }
 }
@@ -61,9 +61,9 @@ pub enum FaceCard {
 impl FaceCard {
   pub fn get_others(self) -> (FaceCard, FaceCard) {
     match self {
-      Jack => (Self::Queen, Self::King),
-      Queen => (Self::Jack, Self::King),
-      King => (Self::Jack, Self::Queen),
+      FaceCard::Jack => (Self::Queen, Self::King),
+      FaceCard::Queen => (Self::Jack, Self::King),
+      FaceCard::King => (Self::Jack, Self::Queen),
     }
   }
 }
