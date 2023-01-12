@@ -1,7 +1,6 @@
 mod card;
 mod game;
 
-use card::{Play, Card, NumberedCard, FaceCard};
 use game::Game;
 
 fn main() {
@@ -13,7 +12,8 @@ fn main() {
 
 #[cfg(test)]
 mod tests {
-  use super::*;
+  use crate::card::{Play, Card, NumberedCard, FaceCard};
+  use crate::game::Game;
 
   #[test]
   fn get_valid_plays() {
