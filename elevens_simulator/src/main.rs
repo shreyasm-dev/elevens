@@ -3,6 +3,7 @@ mod game;
 
 use card::{NumberedCard, Card, FaceCard, Play};
 use game::{Game, Board, Deck};
+use indicatif::ProgressIterator;
 use rand::{seq::SliceRandom, thread_rng};
 
 fn main() {
@@ -10,7 +11,7 @@ fn main() {
 
   let mut sum = 0;
 
-  for _ in 0..n {
+  for _ in (0..n).progress() {
     sum += simulate_round(|plays, _| plays.choose(&mut thread_rng()).unwrap().clone());
   }
 
@@ -18,7 +19,7 @@ fn main() {
 
   let mut sum = 0;
 
-  for _ in 0..n {
+  for _ in (0..n).progress() {
     sum += simulate_round(|plays, game| {
       // Sort by high-to-low (i_c - f_c) for numbered cards and high-to-low (i_f - f_f) for face cards
       let mut plays = plays.iter().map(|play| {
