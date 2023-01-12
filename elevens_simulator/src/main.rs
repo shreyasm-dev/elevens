@@ -10,7 +10,7 @@ fn main() {
   let n = 1000;
 
   for _ in 0..n {
-    sum += simulate_round(|p| p.choose(&mut thread_rng()).unwrap().clone());
+    sum += simulate_round(|plays| plays.choose(&mut thread_rng()).unwrap().clone());
   }
 
   println!("~{} games played before winning (randomly picked, {} samples)", (sum as f64) / (n as f64), n);
