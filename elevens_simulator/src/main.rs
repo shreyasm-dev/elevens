@@ -13,7 +13,7 @@ fn main() {
     sum += simulate_round(|p| p.choose(&mut thread_rng()).unwrap().clone());
   }
 
-  println!("~{} games played before winning (random strategy, {} samples)", (sum as f64) / (n as f64), n);
+  println!("~{} games played before winning (randomly picked, {} samples)", (sum as f64) / (n as f64), n);
 }
 
 fn simulate_round<P: Fn(Vec<Play>) -> Play>(picker: P) -> i64 {
