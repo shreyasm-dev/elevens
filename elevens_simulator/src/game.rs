@@ -1,7 +1,7 @@
-use rand::{thread_rng, seq::SliceRandom};
-use crate::card::{Card, NumberedCard, FaceCard, Play};
+use crate::card::{Card, FaceCard, NumberedCard, Play};
+use rand::{seq::SliceRandom, thread_rng};
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Game {
   pub deck: Deck,
   pub board: Board,
@@ -38,10 +38,16 @@ impl Game {
             plays.push(Play::FaceTriple);
           }
         }
+        Card::Placeholder => panic!("Unexpected error: found placeholder card")
       }
     }
 
     plays
+  }
+
+  pub fn play(&mut self, play: Play) {
+    self.board.play(play);
+    self.board.fill(&mut self.deck);
   }
 
   pub fn is_game_won(self) -> bool {
@@ -53,22 +59,28 @@ impl Game {
   }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Deck {
-  pub cards: Vec<Card>,
+  pub cards: [Card; 52],
 }
 
 impl Deck {
   pub fn new() -> Self {
-    let mut cards = Vec::new();
+    let mut cards: [Card; 52] = [Card::Placeholder; 52];
 
-    for _ in 1..=4 {
+    for suit in 1..=4 {
       for number in 1..=10 {
-        cards.push(Card::Number(NumberedCard::from(number)));
+        cards[(suit - 1) * 13 + number - 1] = Card::Number(NumberedCard::from(number));
       }
-  
-      for face in [FaceCard::Jack, FaceCard::Queen, FaceCard::King].iter() {
-        cards.push(Card::Face(*face));
+
+      for face in 1..=3 {
+        cards[(suit - 1) * 13 + 10 + face - 1] = Card::Face(
+          [
+            FaceCard::Jack,
+            FaceCard::Queen,
+            FaceCard::King,
+          ][face - 1]
+        );
       }
     }
 
@@ -80,30 +92,46 @@ impl Deck {
   }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Board {
-  pub cards: Vec<Card>,
+  pub cards: [Card; 9],
 }
 
 impl Board {
   pub fn new() -> Self {
-    Self { cards: Vec::new() }
+    Self {
+      cards: [Card::Placeholder; 9],
+    }
   }
 
-  pub fn add_card(&mut self, card: Card) {
-    self.cards.push(card);
-  }
+  pub fn play(&mut self, play: Play) {
+    let cards = match play {
+      Play::NumberedPair(card) => vec![Card::Number(card), Card::Number(card.get_complement())],
+      Play::FaceTriple => vec![
+        Card::Face(FaceCard::Jack),
+        Card::Face(FaceCard::Queen),
+        Card::Face(FaceCard::King),
+      ],
+    };
 
-  pub fn play_cards(&mut self, cards: Vec<Card>) {
     for card in cards {
-      self.cards.remove(self.cards.iter().position(|c| *c == card).unwrap());
+      let index = self.cards.iter().position(|c| *c == card).unwrap();
+      self.cards[index] = self.cards[self.cards.len() - 1];
+      self.cards[self.cards.len() - 1] = Card::Placeholder;
     }
   }
 
   pub fn fill(&mut self, deck: &mut Deck) {
-    while self.cards.len() < 9 {
-      self.add_card(deck.cards.pop().unwrap());
-    }
+    self.cards = self.cards.map(|card| {
+      if card == Card::Placeholder {
+        let index = deck.cards.iter().position(|c| *c != Card::Placeholder).unwrap();
+        let card = deck.cards[index];
+        deck.cards[index] = Card::Placeholder;
+        card
+      } else {
+        card
+      }
+    });
   }
 }
 
@@ -121,7 +149,7 @@ impl AsRef<Deck> for Deck {
   }
 }
 
-impl AsRef<Board>for Board {
+impl AsRef<Board> for Board {
   fn as_ref(&self) -> &Board {
     &self
   }

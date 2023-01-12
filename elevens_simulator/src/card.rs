@@ -8,6 +8,7 @@ pub enum Play {
 pub enum Card {
   Number(NumberedCard),
   Face(FaceCard),
+  Placeholder,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -25,7 +26,7 @@ pub enum NumberedCard {
 }
 
 impl NumberedCard {
-  pub fn from(number: u8) -> Self {
+  pub fn from(number: usize) -> Self {
     match number {
       1 => Self::One,
       2 => Self::Two,
