@@ -6,7 +6,7 @@ use game::{Game, Board, Deck};
 use rand::{seq::SliceRandom, thread_rng};
 
 fn main() {
-  let n = 1000;
+  let n = 1000000;
 
   let mut sum = 0;
 
@@ -15,6 +15,26 @@ fn main() {
   }
 
   println!("~{} games played before winning (randomly picked, {} samples)", (sum as f64) / (n as f64), n);
+
+  let mut sum = 0;
+
+  for _ in 0..n {
+    sum += simulate_round(|plays, game| {
+      // Sort by high-to-low (i_c - f_c) for numbered cards and high-to-low (i_f - f_f) for face cards
+      let mut plays = plays.iter().map(|play| {
+        match play {
+          Play::NumberedPair(card) => (play, i_c(*card, game.board) - f_c(*card, game.deck)),
+          Play::FaceTriple(card) => (play, i_f(*card, game.board) - f_f(*card, game.deck, game.board)),
+        }
+      }).collect::<Vec<_>>();
+
+      plays.sort_by(|(_, a), (_, b)| b.partial_cmp(a).unwrap());
+
+      plays[0].0.clone()
+    });
+  }
+
+  println!("~{} games played before winning (strategically picked, {} samples)", (sum as f64) / (n as f64), n);
 }
 
 fn simulate_round<P: Fn(Vec<Play>, Game) -> Play>(picker: P) -> i64 {
