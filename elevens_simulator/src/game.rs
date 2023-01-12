@@ -37,7 +37,7 @@ impl Game {
             plays.push(Play::FaceTriple);
           }
         }
-        Card::Placeholder => panic!("Unexpected error: found placeholder card")
+        Card::Placeholder => (),
       }
     }
 
