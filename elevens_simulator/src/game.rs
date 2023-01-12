@@ -106,3 +106,23 @@ impl Board {
     }
   }
 }
+
+// AsRef
+
+impl AsRef<Game> for Game {
+  fn as_ref(&self) -> &Game {
+    &self
+  }
+}
+
+impl AsRef<Deck> for Deck {
+  fn as_ref(&self) -> &Deck {
+    &self
+  }
+}
+
+impl AsRef<Board>for Board {
+  fn as_ref(&self) -> &Board {
+    &self
+  }
+}
