@@ -3,24 +3,27 @@ mod game;
 
 use card::{NumberedCard, Card, FaceCard, Play};
 use game::{Game, Board, Deck};
-use indicatif::ProgressIterator;
+use indicatif::{ProgressBar, ProgressIterator};
 use rand::{seq::SliceRandom, thread_rng};
+use rayon::prelude::*;
 
 fn main() {
-  let n = 1000000;
+  let n = 10000000;
 
-  let mut sum = 0;
+  let progress = ProgressBar::new(n as u64);
 
-  for _ in (0..n).progress() {
-    sum += simulate_round(|plays, _| plays.choose(&mut thread_rng()).unwrap().clone());
-  }
+  let sum: i64 = (0..n).into_par_iter().map(|_| {
+    progress.inc(1);
+    simulate_round(|plays, _| plays.choose(&mut thread_rng()).unwrap().clone())
+  }).sum();
 
   println!("~{} games played before winning (randomly picked, {} samples)", (sum as f64) / (n as f64), n);
 
-  let mut sum = 0;
+  let progress = ProgressBar::new(n as u64);
 
-  for _ in (0..n).progress() {
-    sum += simulate_round(|plays, game| {
+  let sum: i64 = (0..n).into_par_iter().map(|_| {
+    progress.inc(1);
+    simulate_round(|plays, game| {
       // Sort by high-to-low (i_c - f_c) for numbered cards and high-to-low (i_f - f_f) for face cards
       let mut plays = plays.iter().map(|play| {
         match play {
@@ -32,8 +35,8 @@ fn main() {
       plays.sort_by(|(_, a), (_, b)| b.partial_cmp(a).unwrap());
 
       plays[0].0.clone()
-    });
-  }
+    })
+  }).sum();
 
   println!("~{} games played before winning (strategically picked, {} samples)", (sum as f64) / (n as f64), n);
 }
