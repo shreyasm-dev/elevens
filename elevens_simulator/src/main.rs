@@ -3,7 +3,7 @@ mod game;
 
 use card::{NumberedCard, Card, FaceCard, Play};
 use game::{Game, Board, Deck};
-use indicatif::{ProgressBar, ProgressIterator};
+use indicatif::ProgressBar;
 use rand::{seq::SliceRandom, thread_rng};
 use rayon::prelude::*;
 
