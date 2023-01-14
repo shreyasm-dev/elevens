@@ -118,4 +118,16 @@ The strategy is simple:
 
 Continuing the previous example, we can calculate the values of all of the cards. In this case, we would play (not just because it is the only move, but because it is the best) the ten along with either of the aces.
 
+\section{Simulation}
+
+In the elevens\_simulator directory, there is a Rust program that simulates a game of elevens with random choices and with strategic choices. You will need to have Rust installed to run it. Adjust $n$ in src/main.rs to change the number of samples to take. The number of games actually played will be anywhere from 14 to 22 times $n$, since a single sample is basically playing games repeatedly until a game is won. Some experimental results:
+
+\begin{outline}
+  \1 $n = 1000000$
+    \2 Random: On average, $9.358113$ games needed to be played to win
+    \2 Strategic: On average, $9.275664$ games needed to be played to win 
+\end{outline}
+
+Large values of $n$ take a while to run, especially with strategic choices, as the program is relatively unoptimized (one of the reasons I chose Rust, I wanted it to be somewhat fast without overt optimization). It's recommended to spin up a cloud instance or VM (i.e. EC2 or Github Codespaces) to run the program, or run it locally if you have a powerful enough computer (or have time to wait).
+
 \end{document}
