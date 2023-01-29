@@ -8,7 +8,7 @@ use rand::{seq::SliceRandom, thread_rng};
 use rayon::prelude::*;
 
 fn main() {
-  let n = 10000000;
+  let n = 100000000;
 
   let progress = ProgressBar::new(n as u64);
 
@@ -25,6 +25,18 @@ fn main() {
     progress.inc(1);
     simulate_round(|plays, game| {
       // Sort by high-to-low (i_c - f_c) for numbered cards and high-to-low (i_f - f_f) for face cards
+      let facetriple: Option<Play> = plays.iter().find(|play| {
+        match play {
+          Play::FaceTriple(_) => true,
+          _ => false,
+        }
+      }).map(|play| play.clone());
+
+      // If it does, return it
+      if let Some(play) = facetriple {
+        return play;
+      }
+
       let mut plays = plays.iter().map(|play| {
         match play {
           Play::NumberedPair(card) => (play, i_c(*card, game.board) - f_c(*card, game.deck)),
